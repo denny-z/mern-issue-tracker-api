@@ -82,7 +82,7 @@ type Query {
 type Mutation {
   setAboutMessage(message: String!): String
   addIssue(issue: IssueInputs!): Issue!
-  updateIssue(id: Int!, changes: IssueUpdateInputs!): Issue!
+  issueUpdate(id: Int!, changes: IssueUpdateInputs!): Issue!
   deleteIssue(id: Int!): Boolean!
   issueRestore(id: Int!): Issue
 }

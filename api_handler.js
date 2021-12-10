@@ -19,7 +19,7 @@ const resolvers = {
   Mutation: {
     setAboutMessage: about.setMessage,
     addIssue: issue.add,
-    updateIssue: issue.update,
+    issueUpdate: issue.update,
     deleteIssue: issue.delete,
     issueRestore: issue.restore,
   },
