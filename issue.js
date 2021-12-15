@@ -91,7 +91,6 @@ async function update(_, { id, changes }) {
   }
   await issues.updateOne({ id }, { $set: changes });
   const savedIssue = issues.findOne({ id });
-  console.log(savedIssue);
   return savedIssue;
 }
 
