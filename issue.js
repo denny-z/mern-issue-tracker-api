@@ -86,6 +86,9 @@ async function update(_, { id, changes }) {
 
   if (changes.title || changes.status || changes.owner) {
     const issue = await issues.findOne({ id });
+    if (issue == null) {
+      throw new UserInputError('Invalid input(s)', { errors: [`Issue with #${id} is not found`] });
+    }
     Object.assign(issue, changes);
     validate(issue);
   }
