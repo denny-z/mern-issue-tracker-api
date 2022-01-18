@@ -86,12 +86,14 @@ async function update(_, { id, changes }) {
 
   if (changes.title || changes.status || changes.owner) {
     const issue = await issues.findOne({ id });
+    if (issue == null) {
+      throw new UserInputError('Invalid input(s)', { errors: [`Issue with #${id} is not found`] });
+    }
     Object.assign(issue, changes);
     validate(issue);
   }
   await issues.updateOne({ id }, { $set: changes });
   const savedIssue = issues.findOne({ id });
-  console.log(savedIssue);
   return savedIssue;
 }
 
@@ -116,16 +118,19 @@ async function restore(_, { id }) {
   const deletedIssues = getDeletedCollection();
 
   const issue = await deletedIssues.findOne({ id });
-  if (!issue) return false;
-  // IMP-DIFF: "restored" field used to indicate field is restoredez instead of "deleted".
+  if (!issue) return null;
+  // IMP-DIFF: "restored" field used to indicate field is restored instead of "deleted".
   issue.restored = new Date();
 
   const insertResult = await issues.insertOne(issue);
   if (insertResult.insertedId) {
     const deleteResult = await deletedIssues.removeOne({ id });
-    return deleteResult.deletedCount === 1;
+    if (deleteResult.deletedCount === 1) {
+      return issue;
+    }
+    return null;
   }
-  return false;
+  return null;
 }
 
 async function count(_, filterArgs) {
